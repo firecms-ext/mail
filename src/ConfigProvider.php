@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-namespace FirecmsExt\Utils;
+namespace FirecmsExt\Mail;
 
 class ConfigProvider
 {

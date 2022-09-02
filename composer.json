@@ -1,18 +1,18 @@
 {
-  "name": "firecms-ext/utils",
+  "name": "firecms-ext/mail",
   "type": "library",
   "license": "MIT",
   "keywords": [
     "php",
-    "utils",
+    "mail",
     "age",
     "toTree",
     "hyperf"
   ],
-  "description": "hyperf 扩展：常用工具函数",
+  "description": "hyperf 扩展：邮箱",
   "autoload": {
     "psr-4": {
-      "FirecmsExt\\Utils\\": "src/"
+      "FirecmsExt\\Mail\\": "src/"
     },
     "files": [
       "src/Functions.php"
@@ -49,7 +49,7 @@
   },
   "extra": {
     "hyperf": {
-      "config": "FirecmsExt\\Utils\\ConfigProvider"
+      "config": "FirecmsExt\\Mail\\ConfigProvider"
     }
   }
 }
