@@ -9,16 +9,12 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-namespace HyperfTest\Cases;
+namespace FirecmsExt\Mail\Contracts;
 
-/**
- * @internal
- * @coversNothing
- */
-class FunctionTest extends AbstractTestCase
+interface MailManagerInterface
 {
-    public function test()
-    {
-        $this->assertIsInt(1);
-    }
+    /**
+     * 按名称获取邮件服务器实例。
+     */
+    public function get(string $name): MailerInterface;
 }
