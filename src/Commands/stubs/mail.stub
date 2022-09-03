@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace %NAMESPACE%;
 
-use FirecmsExt\Contract\ShouldQueue;
+use FirecmsExt\Contracts\ShouldQueue;
 use FirecmsExt\Mail\Mailable;
 
 class %CLASS% extends Mailable implements ShouldQueue
@@ -18,9 +18,10 @@ class %CLASS% extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(string $subject,string $content)
     {
-        //
+        $this->subject = $subject;
+        $this->textBody = $content;
     }
 
     /**
@@ -28,6 +29,5 @@ class %CLASS% extends Mailable implements ShouldQueue
      */
     public function build(): void
     {
-        $this->htmlView('view.name');
     }
 }
