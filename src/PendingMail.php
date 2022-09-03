@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace FirecmsExt\Mail;
 
 use FirecmsExt\Contract\HasLocalePreference;
+use FirecmsExt\Contract\HasMailAddress;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use FirecmsExt\Mail\Contracts\MailerInterface;
 use FirecmsExt\Mail\Contracts\MailManagerInterface;
 use Hyperf\Utils\ApplicationContext;
+use Hyperf\Utils\Collection;
 
 class PendingMail
 {
@@ -27,22 +29,22 @@ class PendingMail
     /**
      * The locale of the message.
      */
-    protected string $locale;
+    protected string $locale = '';
 
     /**
      * The "to" recipients of the message.
      */
-    protected array $to = [];
+    protected HasMailAddress|array|string|Collection $to = [];
 
     /**
      * The "cc" recipients of the message.
      */
-    protected array $cc = [];
+    protected HasMailAddress|array|string|Collection $cc = [];
 
     /**
      * The "bcc" recipients of the message.
      */
-    protected array $bcc = [];
+    protected HasMailAddress|array|string|Collection $bcc = [];
 
     /**
      * Create a new mailable mailer instance.
@@ -130,7 +132,10 @@ class PendingMail
     /**
      * Send a new mailable message instance.
      */
-    public function send(MailableInterface $mailable): array
+    /**
+     * @return array|mixed
+     */
+    public function send(MailableInterface $mailable): mixed
     {
         return $this->mailer->send($this->fill($mailable));
     }
@@ -159,9 +164,9 @@ class PendingMail
         return tap($mailable->to($this->to)
             ->cc($this->cc)
             ->bcc($this->bcc), function (MailableInterface $mailable) {
-                if ($this->locale) {
-                    $mailable->locale($this->locale);
-                }
-            });
+            if ($this->locale) {
+                $mailable->locale($this->locale);
+            }
+        });
     }
 }

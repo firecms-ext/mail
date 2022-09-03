@@ -25,7 +25,6 @@
   },
   "require": {
     "php": ">=8.0",
-    "firecms-ext/contract": "^0.0.11",
     "hyperf/async-queue": "~2.2.0",
     "hyperf/command": "~2.2.0",
     "hyperf/config": "~2.2.0",

@@ -114,7 +114,7 @@ class Message
      *
      * @return $this
      */
-    public function setCc(array|string $address, ?string $name = null, bool $override = false): static
+    public function setCc(string|array|null $address, ?string $name = null, bool $override = false): static
     {
         if ($override) {
             $this->swift->setCc($address, $name);
@@ -130,7 +130,7 @@ class Message
      *
      * @return $this
      */
-    public function setBcc(array|string $address, ?string $name = null, bool $override = false): static
+    public function setBcc(string|array|null $address, ?string $name = null, bool $override = false): static
     {
         if ($override) {
             $this->swift->setBcc($address, $name);

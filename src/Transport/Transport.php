@@ -58,7 +58,7 @@ abstract class Transport implements Swift_Transport
     /**
      * 向传输注册一个插件。
      */
-    public function registerPlugin(Swift_Events_EventListener $plugin): void
+    public function registerPlugin(Swift_Events_EventListener $plugin)
     {
         $this->plugins[] = $plugin;
     }

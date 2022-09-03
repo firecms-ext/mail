@@ -65,32 +65,32 @@ class SmtpTransport extends Transport
         $this->transport = $transport;
     }
 
-    public function isStarted()
+    public function isStarted(): bool
     {
         return call_user_func_array([$this->transport, __FUNCTION__], func_get_args());
     }
 
-    public function start()
+    public function start(): bool
     {
         return call_user_func_array([$this->transport, __FUNCTION__], func_get_args());
     }
 
-    public function stop()
+    public function stop(): bool
     {
         return call_user_func_array([$this->transport, __FUNCTION__], func_get_args());
     }
 
-    public function ping()
+    public function ping(): bool
     {
         return call_user_func_array([$this->transport, __FUNCTION__], func_get_args());
     }
 
-    public function registerPlugin(Swift_Events_EventListener $plugin)
+    public function registerPlugin(Swift_Events_EventListener $plugin): bool
     {
         return call_user_func_array([$this->transport, __FUNCTION__], func_get_args());
     }
 
-    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
+    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null): int
     {
         $this->beforeSendPerformed($message);
 
