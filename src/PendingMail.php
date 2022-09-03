@@ -164,9 +164,9 @@ class PendingMail
         return tap($mailable->to($this->to)
             ->cc($this->cc)
             ->bcc($this->bcc), function (MailableInterface $mailable) {
-            if ($this->locale) {
-                $mailable->locale($this->locale);
-            }
-        });
+                if ($this->locale) {
+                    $mailable->locale($this->locale);
+                }
+            });
     }
 }
