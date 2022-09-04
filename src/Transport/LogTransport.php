@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail\Transport;
 
 use Psr\Log\LoggerInterface;
@@ -53,8 +52,6 @@ class LogTransport implements TransportInterface
 
     /**
      * 获取 LogTransport 实例的记录器。
-     *
-     * @return LoggerInterface
      */
     public function logger(): LoggerInterface
     {

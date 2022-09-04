@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail\Transport;
 
 use Hyperf\Utils\Collection;
@@ -51,8 +50,6 @@ class ArrayTransport implements TransportInterface
 
     /**
      * 检索消息集合。
-     *
-     * @return Collection
      */
     public function messages(): Collection
     {

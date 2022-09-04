@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail\Transport;
 
 use Aws\Exception\AwsException;
@@ -53,7 +52,6 @@ class SesTransport extends AbstractTransport
 
     /**
      * 获取SesTransport实例的Amazon SES客户端。
-     *
      */
     public function ses(): SesClient
     {

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
+
 namespace FirecmsExt\Mail;
 
 use Closure;
@@ -21,10 +22,7 @@ use FirecmsExt\Mail\Events\MessageSending;
 use FirecmsExt\Mail\Events\MessageSent;
 use FirecmsExt\Mail\Utils\HtmlString;
 use Hyperf\AsyncQueue\JobInterface;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\Macroable\Macroable;
-use Hyperf\View\Engine\EngineInterface;
-use Hyperf\View\RenderInterface;
 use InvalidArgumentException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -42,12 +40,6 @@ class Mailer implements MailerInterface, MailQueueInterface
     protected string $name;
 
     /**
-     * 视图工厂实例。
-     */
-    #[Inject]
-    protected EngineInterface $views;
-
-    /**
      * Symfony Transport 实例。
      */
     protected TransportInterface $transport;
@@ -55,7 +47,6 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 事件调度程序实例。
      */
-    #[Inject]
     protected EventDispatcherInterface $events;
 
     /**
@@ -86,10 +77,15 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 创建一个新的 Mailer 实例。
      */
-    public function __construct(string $name, TransportInterface $transport)
+    public function __construct(
+        string                   $name,
+        TransportInterface       $transport,
+        EventDispatcherInterface $events
+    )
     {
         $this->name = $name;
         $this->transport = $transport;
+        $this->events = $events;
     }
 
     /**
@@ -173,24 +169,10 @@ class Mailer implements MailerInterface, MailQueueInterface
     }
 
     /**
-     * 将给定的消息呈现为视图。
-     */
-    public function render(array|string $view, array $data = []): string
-    {
-        // First we need to parse the view, which could either be a string or an array
-        // containing both an HTML and plain text versions of the view which should
-        // be used when sending an e-mail. We will extract both of them out here.
-        [$view, $plain, $raw] = $this->parseView($view);
-
-        $data['message'] = $this->createMessage();
-
-        return $this->renderView($view ?: $plain, $data);
-    }
-
-    /**
      * 使用视图发送新消息。
+     * @throws TransportExceptionInterface
      */
-    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): ?SentMessage
+    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): bool|SentMessage|null
     {
         if ($view instanceof MailableInterface) {
             return $this->sendMailable($view);
@@ -285,14 +267,6 @@ class Mailer implements MailerInterface, MailQueueInterface
     }
 
     /**
-     * 获取视图实例。
-     */
-    public function getViewFactory(): RenderInterface
-    {
-        return $this->views;
-    }
-
-    /**
      * 设置Symfony Transport实例。
      */
     public function setSymfonyTransport(TransportInterface $transport)
@@ -303,7 +277,7 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 发送给定的可邮寄邮件。
      */
-    protected function sendMailable(MailableInterface $mailable): ?SentMessage
+    protected function sendMailable(MailableInterface $mailable): SentMessage|bool|null
     {
         return $mailable instanceof ShouldQueueInterface
             ? $mailable->mailer($this->name)->queue()
@@ -333,9 +307,9 @@ class Mailer implements MailerInterface, MailQueueInterface
         // named keys instead, allowing the developers to use one or the other.
         if (is_array($view)) {
             return [
-                $view['html'] ?? null,
-                $view['text'] ?? null,
-                $view['raw'] ?? null,
+                    $view['html'] ?? null,
+                    $view['text'] ?? null,
+                    $view['raw'] ?? null,
             ];
         }
 
@@ -363,11 +337,11 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 渲染给定的视图。
      */
-    protected function renderView(string|object $view, array $data): string
+    protected function renderView(string|object $view): string
     {
         return $view instanceof HtmlStringInterface
             ? $view->toHtml()
-            : $this->views->make($view, $data)->render();
+            : $view;
     }
 
     /**
@@ -425,13 +399,7 @@ class Mailer implements MailerInterface, MailQueueInterface
      */
     protected function shouldSendMessage(Email $message, array $data = []): bool
     {
-        if (! $this->events) {
-            return true;
-        }
-
-        return $this->events->dispatch(
-            new MessageSending($message, $data)
-        ) != false;
+        return $this->events->dispatch(new MessageSending($message, $data)) != false;
     }
 
     /**

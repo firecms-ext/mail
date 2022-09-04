@@ -34,7 +34,6 @@
     "hyperf/filesystem": "~2.2.0",
     "hyperf/framework": "~2.2.0",
     "hyperf/translation": "~2.2.0",
-    "hyperf/view": "^2.2",
     "symfony/mailer": "^6.0"
   },
   "require-dev": {

@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail\Contracts;
 
 use Closure;
@@ -39,5 +38,5 @@ interface MailerInterface
     /**
      * Send a new message using a view.
      */
-    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): ?SentMessage;
+    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): mixed;
 }

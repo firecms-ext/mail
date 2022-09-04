@@ -22,6 +22,7 @@ use Hyperf\Contract\ContainerInterface;
 use Hyperf\Utils\Arr;
 use Hyperf\Utils\Str;
 use InvalidArgumentException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\FailoverTransport;
@@ -192,7 +193,11 @@ class MailManager implements MailManagerInterface
         // 一旦我们创建了邮件实例，我们将设置一个容器实例
         // 发送邮件。这允许我们通过容器解析 mailer 类
         // 最大可测试性的类，而不是传递闭包。
-        $mailer = new Mailer($name, $this->createSymfonyTransport($config));
+        $mailer = new Mailer(
+            $name,
+            $this->createSymfonyTransport($config),
+            $this->container->get(EventDispatcherInterface::class)
+        );
 
         // 接下来我们将设置这个邮件上的所有全局地址，这允许
         // 方便统一所有"from"地址以及方便调试
@@ -215,7 +220,7 @@ class MailManager implements MailManagerInterface
     }
 
     /**
-     * 创建一个Symfony SMTP传输驱动程序实例。
+     * 创建一个 Symfony SMTP 传输驱动程序实例。
      */
     protected function createSmtpTransport(array $config): EsmtpTransport
     {

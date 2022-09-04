@@ -9,9 +9,11 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
+
 namespace FirecmsExt\Mail;
 
-use FirecmsExt\Mail\Contracts\HasLocalePreferenceInterface;
+use DateInterval;
+use DateTimeInterface;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use FirecmsExt\Mail\Contracts\MailerInterface;
 use Hyperf\Utils\Traits\Conditionable;
@@ -26,24 +28,19 @@ class PendingMail
     protected MailerInterface $mailer;
 
     /**
-     * 消息的区域设置。
-     */
-    protected string $locale;
-
-    /**
      * 邮件的“收件人”。
      */
-    protected array $to = [];
+    protected mixed $to = [];
 
     /**
      * 邮件的“抄送人”。
      */
-    protected array $cc = [];
+    protected mixed $cc = [];
 
     /**
      *  邮件的“秘密抄送人”。
      */
-    protected array $bcc = [];
+    protected mixed $bcc = [];
 
     /**
      * 创建一个新的可发送邮件实例。
@@ -54,18 +51,6 @@ class PendingMail
     }
 
     /**
-     * 设置消息的区域设置。
-     *
-     * @return $this
-     */
-    public function locale(string $locale): static
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
      * 设置邮件的收件人。
      *
      * @return $this
@@ -73,10 +58,6 @@ class PendingMail
     public function to(mixed $users): static
     {
         $this->to = $users;
-
-        if (! $this->locale && $users instanceof HasLocalePreferenceInterface) {
-            $this->locale($users->preferredLocale());
-        }
 
         return $this;
     }
@@ -108,7 +89,7 @@ class PendingMail
     /**
      * 发送一个新的邮件消息实例。
      */
-    public function send(MailableInterface $mailable): ?SentMessage
+    public function send(MailableInterface $mailable): mixed
     {
         return $this->mailer->send($this->fill($mailable));
     }
@@ -116,17 +97,15 @@ class PendingMail
     /**
      * 将给定的可邮件推入队列。
      */
-    public function queue(MailableInterface $mailable): mixed
+    public function queue(MailableInterface $mailable): bool
     {
         return $this->mailer->queue($this->fill($mailable));
     }
 
     /**
      * 在(n)秒后交付排队的消息。
-     *
-     * @return mixed
      */
-    public function later(\DateInterval|\DateTimeInterface|int $delay, MailableInterface $mailable)
+    public function later(DateInterval|DateTimeInterface|int $delay, MailableInterface $mailable): mixed
     {
         return $this->mailer->later($delay, $this->fill($mailable));
     }
@@ -136,12 +115,8 @@ class PendingMail
      */
     protected function fill(MailableInterface $mailable): Mailable
     {
-        return tap($mailable->to($this->to)
+        return $mailable->to($this->to)
             ->cc($this->cc)
-            ->bcc($this->bcc), function (MailableInterface $mailable) {
-                if ($this->locale) {
-                    $mailable->locale($this->locale);
-                }
-            });
+            ->bcc($this->bcc);
     }
 }

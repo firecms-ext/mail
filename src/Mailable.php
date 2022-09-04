@@ -214,7 +214,7 @@ class Mailable implements MailableInterface, RenderInterface
         }
 
         $queue = $queue ?: (property_exists($this, 'queue')
-            ? $this->queue : array_key_first(config('async_queue')));
+            ? $this->queue : array_key_first(config('async_queue', [])));
 
         return ApplicationContext::getContainer()
             ->get(DriverFactory::class)
@@ -230,7 +230,7 @@ class Mailable implements MailableInterface, RenderInterface
     public function later(DateInterval|DateTimeInterface|int $delay, ?string $queue = null): mixed
     {
         $queue = $queue ?: (property_exists($this, 'queue')
-            ? $this->queue : array_key_first(config('async_queue')));
+            ? $this->queue : array_key_first(config('async_queue', [])));
 
         return ApplicationContext::getContainer()
             ->get(DriverFactory::class)
@@ -615,7 +615,10 @@ class Mailable implements MailableInterface, RenderInterface
 
     /**
      * 断言给定的文本存在于纯文本电子邮件正文中。
+     * @param string $string
      * @return $this
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function assertSeeInText(string $string): static
@@ -632,7 +635,10 @@ class Mailable implements MailableInterface, RenderInterface
 
     /**
      * 断言给定的文本在纯文本电子邮件正文中不存在。
+     * @param string $string
      * @return $this
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function assertDontSeeInText(string $string): static
@@ -649,7 +655,10 @@ class Mailable implements MailableInterface, RenderInterface
 
     /**
      * 断言给定的文本字符串按顺序出现在纯文本电子邮件正文中。
+     * @param array $strings
      * @return $this
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function assertSeeInOrderInText(array $strings): static
@@ -715,6 +724,7 @@ class Mailable implements MailableInterface, RenderInterface
         if (isset($this->view, $this->textView)) {
             return [$this->view, $this->textView];
         }
+
         if (isset($this->textView)) {
             return ['text' => $this->textView];
         }
@@ -972,6 +982,5 @@ class Mailable implements MailableInterface, RenderInterface
         }
 
         return $this->assertionableRenderStrings = [(string) $html, (string) $text];
-
     }
 }
