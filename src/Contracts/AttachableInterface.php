@@ -11,6 +11,12 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Contracts;
 
-interface ShouldQueue
+use FirecmsExt\Mail\Attachment;
+
+interface AttachableInterface
 {
+    /**
+     * Get an attachment instance for this entity.
+     */
+    public function toMailAttachment(): Attachment;
 }

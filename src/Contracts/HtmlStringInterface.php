@@ -11,13 +11,10 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Contracts;
 
-/**
- * 邮件管理.
- */
-interface MailManagerInterface
+interface HtmlStringInterface
 {
     /**
-     * Get a mailer instance by name.
+     * Get content as a string of HTML.
      */
-    public function mailer(string $name = null): MailerInterface;
+    public function toHtml(): string;
 }

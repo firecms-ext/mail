@@ -10,10 +10,10 @@ declare(strict_types=1);
  */
 namespace %NAMESPACE%;
 
-use FirecmsExt\Contracts\ShouldQueue;
+use FirecmsExt\Contracts\ShouldQueueInterface;
 use FirecmsExt\Mail\Mailable;
 
-class %CLASS% extends Mailable implements ShouldQueue
+class %CLASS% extends Mailable implements ShouldQueueInterface
 {
     /**
      * Create a new message instance.

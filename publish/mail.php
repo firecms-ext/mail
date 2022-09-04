@@ -12,7 +12,7 @@ declare(strict_types=1);
 return [
     /*
     |--------------------------------------------------------------------------
-    | Default Mailer
+    | Default MailerInterface
     |--------------------------------------------------------------------------
     |
     | This option controls the default mailer that is used to send any email
@@ -25,82 +25,65 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Mailer Configurations
+    | MailerInterface Configurations
     |--------------------------------------------------------------------------
     |
     | Here you may configure all of the mailers used by your application plus
     | their respective settings. Several examples have been configured for
     | you and you are free to add your own as your application requires.
     |
-    | Supports a variety of mail "transport" drivers to be used while
+    | Laravel supports a variety of mail "transport" drivers to be used while
     | sending an e-mail. You will specify which one you are using for your
     | mailers below. You are free to add additional mailers as required.
+    |
+    | Supported: "smtp", "sendmail", "mailgun", "ses",
+    |            "postmark", "log", "array", "failover"
     |
     */
 
     'mailers' => [
         'smtp' => [
-            'transport' => \FirecmsExt\Mail\Transport\SmtpTransport::class,
-            'options' => [
-                'host' => env('MAIL_SMTP_HOST', 'smtp.mailgun.org'),
-                'port' => env('MAIL_SMTP_PORT', 587),
-                'encryption' => env('MAIL_SMTP_ENCRYPTION', 'tls'),
-                'username' => env('MAIL_SMTP_USERNAME'),
-                'password' => env('MAIL_SMTP_PASSWORD'),
-                'timeout' => env('MAIL_SMTP_TIMEOUT'),
-                'auth_mode' => env('MAIL_SMTP_AUTH_MODE'),
-            ],
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
-        'aws_ses' => [
-            'transport' => \FirecmsExt\Mail\Transport\AwsSesTransport::class,
-            'options' => [
-                'credentials' => [
-                    'key' => env('MAIL_AWS_SES_ACCESS_KEY_ID'),
-                    'secret' => env('MAIL_AWS_SES_SECRET_ACCESS_KEY'),
-                ],
-                'region' => env('MAIL_AWS_SES_REGION'),
-            ],
-        ],
-
-        'aliyun_dm' => [
-            'transport' => \FirecmsExt\Mail\Transport\AliyunDmTransport::class,
-            'options' => [
-                'access_key_id' => env('MAIL_ALIYUN_DM_ACCESS_KEY_ID'),
-                'access_secret' => env('MAIL_ALIYUN_DM_ACCESS_SECRET'),
-                'region_id' => env('MAIL_ALIYUN_DM_REGION_ID'),
-                'click_trace' => env('MAIL_ALIYUN_DM_CLICK_TRACE', '0'),
-            ],
+        'ses' => [
+            'transport' => 'ses',
         ],
 
         'mailgun' => [
-            'transport' => \FirecmsExt\Mail\Transport\MailgunTransport::class,
-            'options' => [
-                'domain' => env('MAIL_MAILGUN_DOMAIN'),
-                'key' => env('MAIL_MAILGUN_KEY'),
-                'endpoint' => env('MAIL_MAILGUN_ENDPOINT', 'api.mailgun.net'),
-            ],
+            'transport' => 'mailgun',
         ],
 
         'postmark' => [
-            'transport' => \FirecmsExt\Mail\Transport\PostmarkTransport::class,
-            'options' => [
-                'token' => env('MAIL_POSTMARK_TOKEN'),
-            ],
+            'transport' => 'postmark',
         ],
 
         'sendmail' => [
-            'transport' => \FirecmsExt\Mail\Transport\SendmailTransport::class,
-            'options' => [
-                'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs'),
-            ],
+            'transport' => 'sendmail',
+            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
         'log' => [
-            'transport' => \FirecmsExt\Mail\Transport\LogTransport::class,
-            'options' => [
-                'name' => 'mail.local',
-                'group' => 'default',
+            'transport' => 'log',
+            'channel' => env('MAIL_LOG_CHANNEL'),
+        ],
+
+        'array' => [
+            'transport' => 'array',
+        ],
+
+        'failover' => [
+            'transport' => 'failover',
+            'mailers' => [
+                'smtp',
+                'log',
             ],
         ],
     ],
@@ -123,15 +106,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logger Options
+    | Markdown Mail Settings
     |--------------------------------------------------------------------------
     |
-    | The `hyperf/logger` component is required if enabled.
+    | If you are using Markdown based email rendering, you may configure your
+    | theme and component paths here, allowing you to customize the design
+    | of the emails. Or, you may simply stick with the Laravel defaults!
+    |
     */
 
-    'logger' => [
-        'enabled' => false,
-        'name' => 'mail',
-        'group' => 'default',
+    'markdown' => [
+        'theme' => 'default',
+
+        'paths' => [
+            // resource_path('views/vendor/mail'),
+        ],
     ],
 ];

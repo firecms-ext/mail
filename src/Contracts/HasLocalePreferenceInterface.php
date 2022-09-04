@@ -11,13 +11,10 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Contracts;
 
-/**
- * 邮件管理.
- */
-interface MailManagerInterface
+interface HasLocalePreferenceInterface
 {
     /**
-     * Get a mailer instance by name.
+     * Get the preferred locale of the entity.
      */
-    public function mailer(string $name = null): MailerInterface;
+    public function preferredLocale(): ?string;
 }

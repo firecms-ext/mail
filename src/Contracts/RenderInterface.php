@@ -11,13 +11,10 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Contracts;
 
-/**
- * 邮件管理.
- */
-interface MailManagerInterface
+interface RenderInterface
 {
     /**
-     * Get a mailer instance by name.
+     * Get the evaluated contents of the object.
      */
-    public function mailer(string $name = null): MailerInterface;
+    public function render(): string;
 }
