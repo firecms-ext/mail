@@ -44,7 +44,7 @@ use Symfony\Component\Mime\Address;
 /**
  * 邮寄邮件类.
  */
-class Mailable implements MailableInterface, RenderInterface
+abstract class Mailable implements MailableInterface
 {
     use Conditionable,
         ForwardsCalls,
@@ -191,7 +191,7 @@ class Mailable implements MailableInterface, RenderInterface
             ? $mailer->mailer($this->mailer)
             : $mailer;
 
-        return $mailer->send($this->buildView(), $this->buildViewData(), function ($message) {
+        return $mailer->send($this->buildView(), function ($message) {
             $this->buildFrom($message)
                 ->buildRecipients($message)
                 ->buildSubject($message)
@@ -212,14 +212,7 @@ class Mailable implements MailableInterface, RenderInterface
         if (isset($this->delay)) {
             return $this->later($this->delay, $queue);
         }
-
-        $queue = $queue ?: (property_exists($this, 'queue')
-            ? $this->queue : array_key_first(config('async_queue', [])));
-
-        return ApplicationContext::getContainer()
-            ->get(DriverFactory::class)
-            ->get($queue)
-            ->push($this->newQueuedJob());
+        return $this->later(0, $queue);
     }
 
     /**
@@ -232,24 +225,14 @@ class Mailable implements MailableInterface, RenderInterface
         $queue = $queue ?: (property_exists($this, 'queue')
             ? $this->queue : array_key_first(config('async_queue', [])));
 
+        if (is_null($queue)) {
+            throw new \Exception('Please configure "async_queue"', 500);
+        }
+
         return ApplicationContext::getContainer()
             ->get(DriverFactory::class)
             ->get($queue)
             ->push($this->newQueuedJob(), $delay);
-    }
-
-    /**
-     * 将可邮件渲染到视图中。
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
-     */
-    public function render(): string
-    {
-        return ApplicationContext::getContainer()
-            ->get(\Hyperf\View\RenderInterface::class)
-            ->getContents($this->view, $this->buildViewData());
     }
 
     /**

@@ -172,7 +172,7 @@ class Mailer implements MailerInterface, MailQueueInterface
      * 使用视图发送新消息。
      * @throws TransportExceptionInterface
      */
-    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): bool|SentMessage|null
+    public function send(array|string|MailableInterface $view, Closure|string $callback = null): bool|SentMessage|null
     {
         if ($view instanceof MailableInterface) {
             return $this->sendMailable($view);

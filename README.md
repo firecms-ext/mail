@@ -7,6 +7,8 @@ composer require firecms-ext/mail
 php bin/hyperf.php vendor:publish firecms-ext/mail
 # 生成邮件
 php bin/hyperf.php gen:mail MessageMail
+# 队列配置
+php bin/hyperf.php vendor:publish hyperf/async-queue
 ```
 
 # 调用方法
@@ -17,5 +19,5 @@ FirecmsExt\Mail\Mail::cc(mixed $users): PendingMail;
 FirecmsExt\Mail\Mail::bcc(mixed $users): PendingMail;
 FirecmsExt\Mail\Mail::later(MailableInterface $mailable, int $delay, ?string $queue = null): bool;
 FirecmsExt\Mail\Mail::queue(MailableInterface $mailable, ?string $queue = null): bool;
-FirecmsExt\Mail\Mail::send(MailableInterface $mailable):null|int;
+FirecmsExt\Mail\Mail::send(MailableInterface $mailable): null|int;
 ```

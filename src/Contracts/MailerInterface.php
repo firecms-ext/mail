@@ -38,5 +38,5 @@ interface MailerInterface
     /**
      * Send a new message using a view.
      */
-    public function send(array|string|MailableInterface $view, array $data = [], Closure|string $callback = null): mixed;
+    public function send(array|string|MailableInterface $view, Closure|string $callback = null): mixed;
 }
