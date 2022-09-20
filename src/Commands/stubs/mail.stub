@@ -1,13 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of firecms-ext/mail.
- *
- * @link     https://github.com/firecms-ext/mail
- * @contact  eric@zhu.email
- * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
- */
+
 namespace %NAMESPACE%;
 
 use FirecmsExt\Mail\Contracts\ShouldQueueInterface as ShouldQueue;
@@ -18,10 +12,8 @@ class %CLASS% extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(string $subject,string $content)
+    public function __construct(public array $data)
     {
-        $this->subject = $subject;
-        $this->textBody = $content;
     }
 
     /**
@@ -29,5 +21,7 @@ class %CLASS% extends Mailable implements ShouldQueue
      */
     public function build(): void
     {
+        $this->subject($this->data['subject'] ?? '')
+            ->html($this->data['content'] ?? '');
     }
 }
