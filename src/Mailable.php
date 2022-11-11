@@ -9,18 +9,13 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail;
 
-use BadMethodCallException;
-use DateInterval;
-use DateTimeInterface;
 use FirecmsExt\Mail\Contracts\AttachableInterface;
 use FirecmsExt\Mail\Contracts\HtmlStringInterface;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use FirecmsExt\Mail\Contracts\MailerInterface;
 use FirecmsExt\Mail\Contracts\MailManagerInterface;
-use FirecmsExt\Mail\Contracts\RenderInterface;
 use FirecmsExt\Mail\Utils\HtmlString;
 use Hyperf\AsyncQueue\Driver\DriverFactory;
 use Hyperf\Filesystem\FilesystemFactory;
@@ -34,9 +29,6 @@ use League\Flysystem\FilesystemException;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mailer\Header\TagHeader;
 use Symfony\Component\Mime\Address;
@@ -49,8 +41,8 @@ abstract class Mailable implements MailableInterface
     use Conditionable,
         ForwardsCalls,
         Macroable {
-        __call as macroCall;
-    }
+            __call as macroCall;
+        }
 
     /**
      * 消息的区域设置。
@@ -95,7 +87,7 @@ abstract class Mailable implements MailableInterface
     /**
      * 纯文本视图。
      */
-    public string $textView ='';
+    public string $textView = '';
 
     /**
      * 邮件视图数据.
@@ -142,7 +134,7 @@ abstract class Mailable implements MailableInterface
     /**
      * The HTML to use for the message.
      */
-    protected string $html ='';
+    protected string $html = '';
 
     /**
      * The tags for the message.
@@ -162,11 +154,9 @@ abstract class Mailable implements MailableInterface
     /**
      * 动态地将参数绑定到消息。
      *
-     * @param string $method
-     * @param array $parameters
      * @return $this
      *
-     * @throws BadMethodCallException
+     * @throws \BadMethodCallException
      */
     public function __call(string $method, array $parameters)
     {
@@ -183,7 +173,7 @@ abstract class Mailable implements MailableInterface
 
     /**
      * 使用给定的邮件器发送消息。
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function send(MailerInterface|MailManagerInterface $mailer): ?SentMessage
     {
@@ -220,7 +210,7 @@ abstract class Mailable implements MailableInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function later(DateInterval|DateTimeInterface|int $delay, ?string $queue = null): mixed
+    public function later(\DateInterval|\DateTimeInterface|int $delay, ?string $queue = null): mixed
     {
         $queue = $queue ?: (property_exists($this, 'queue')
             ? $this->queue : array_key_first(config('async_queue', [])));
@@ -238,7 +228,7 @@ abstract class Mailable implements MailableInterface
     /**
      * 为消息构建视图数据。
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function buildViewData(): array
     {
@@ -248,7 +238,7 @@ abstract class Mailable implements MailableInterface
             $data = array_merge($data, call_user_func(static::$viewDataCallback, $this));
         }
 
-        foreach ((new ReflectionClass($this))->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+        foreach ((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
             if ($property->getDeclaringClass()->getName() !== self::class) {
                 $data[$property->getName()] = $property->getValue($this);
             }
@@ -550,7 +540,7 @@ abstract class Mailable implements MailableInterface
     /**
      * 断言给定的文本存在于HTML电子邮件主体中。
      * @return $this
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertSeeInHtml(string $string): static
     {
@@ -567,7 +557,7 @@ abstract class Mailable implements MailableInterface
     /**
      * 断言给定的文本不在HTML电子邮件正文中。
      * @return $this
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertDontSeeInHtml(string $string): static
     {
@@ -585,7 +575,7 @@ abstract class Mailable implements MailableInterface
      * 断言给定的文本字符串在HTML电子邮件正文中是按顺序出现的。
      *
      * @return $this
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertSeeInOrderInHtml(array $strings): static
     {
@@ -598,11 +588,10 @@ abstract class Mailable implements MailableInterface
 
     /**
      * 断言给定的文本存在于纯文本电子邮件正文中。
-     * @param string $string
      * @return $this
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertSeeInText(string $string): static
     {
@@ -618,11 +607,10 @@ abstract class Mailable implements MailableInterface
 
     /**
      * 断言给定的文本在纯文本电子邮件正文中不存在。
-     * @param string $string
      * @return $this
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertDontSeeInText(string $string): static
     {
@@ -638,11 +626,10 @@ abstract class Mailable implements MailableInterface
 
     /**
      * 断言给定的文本字符串按顺序出现在纯文本电子邮件正文中。
-     * @param array $strings
      * @return $this
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function assertSeeInOrderInText(array $strings): static
     {
@@ -943,7 +930,7 @@ abstract class Mailable implements MailableInterface
      * 将可邮寄的 HTML 和纯文本版本呈现到断言的视图中。
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     protected function renderForAssertions(): array
     {

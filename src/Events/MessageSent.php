@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Events;
 
-use Exception;
 use FirecmsExt\Mail\SentMessage;
 use Symfony\Component\Mime\Email;
 
@@ -75,9 +74,8 @@ class MessageSent
 
     /**
      * 动态获取原始消息。
-     * @param $key
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function __get($key)
     {
@@ -85,6 +83,6 @@ class MessageSent
             return $this->sent->getOriginalMessage();
         }
 
-        throw new Exception('Unable to access undefined property on ' . __CLASS__ . ': ' . $key);
+        throw new \Exception('Unable to access undefined property on ' . __CLASS__ . ': ' . $key);
     }
 }

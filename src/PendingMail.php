@@ -9,11 +9,8 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail;
 
-use DateInterval;
-use DateTimeInterface;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use FirecmsExt\Mail\Contracts\MailerInterface;
 use Hyperf\Utils\Traits\Conditionable;
@@ -105,7 +102,7 @@ class PendingMail
     /**
      * 在(n)秒后交付排队的消息。
      */
-    public function later(DateInterval|DateTimeInterface|int $delay, MailableInterface $mailable): mixed
+    public function later(\DateInterval|\DateTimeInterface|int $delay, MailableInterface $mailable): mixed
     {
         return $this->mailer->later($delay, $this->fill($mailable));
     }

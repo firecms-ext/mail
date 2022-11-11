@@ -13,7 +13,6 @@ namespace FirecmsExt\Mail\Transport;
 
 use Aws\Exception\AwsException;
 use Aws\Ses\SesClient;
-use Exception;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
@@ -76,7 +75,7 @@ class SesTransport extends AbstractTransport
 
     /**
      * {@inheritDoc}
-     * @throws Exception
+     * @throws \Exception
      */
     protected function doSend(SentMessage $message): void
     {
@@ -110,7 +109,7 @@ class SesTransport extends AbstractTransport
         } catch (AwsException $e) {
             $reason = $e->getAwsErrorMessage() ?? $e->getMessage();
 
-            throw new Exception(
+            throw new \Exception(
                 sprintf('Request to AWS SES API failed. Reason: %s.', $reason),
                 is_int($e->getCode()) ? $e->getCode() : 0,
                 $e

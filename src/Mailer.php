@@ -9,10 +9,8 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail;
 
-use Closure;
 use FirecmsExt\Mail\Contracts\HtmlStringInterface;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use FirecmsExt\Mail\Contracts\MailerInterface;
@@ -23,7 +21,6 @@ use FirecmsExt\Mail\Events\MessageSent;
 use FirecmsExt\Mail\Utils\HtmlString;
 use Hyperf\AsyncQueue\JobInterface;
 use Hyperf\Macroable\Macroable;
-use InvalidArgumentException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -37,7 +34,7 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 为邮件服务器配置的名称。
      */
-    protected string $name ='';
+    protected string $name = '';
 
     /**
      * Symfony Transport 实例。
@@ -78,11 +75,10 @@ class Mailer implements MailerInterface, MailQueueInterface
      * 创建一个新的 Mailer 实例。
      */
     public function __construct(
-        string                   $name,
-        TransportInterface       $transport,
+        string $name,
+        TransportInterface $transport,
         EventDispatcherInterface $events
-    )
-    {
+    ) {
         $this->name = $name;
         $this->transport = $transport;
         $this->events = $events;
@@ -172,7 +168,7 @@ class Mailer implements MailerInterface, MailQueueInterface
      * 使用视图发送新消息。
      * @throws TransportExceptionInterface
      */
-    public function send(array|string|MailableInterface $view, Closure|string $callback = null): bool|SentMessage|null
+    public function send(array|string|MailableInterface $view, \Closure|string $callback = null): bool|SentMessage|null
     {
         if ($view instanceof MailableInterface) {
             return $this->sendMailable($view);
@@ -223,7 +219,7 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 对要发送的新电子邮件进行排队。
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function queue(MailableInterface $mailable, ?string $queue = null): bool
     {
@@ -236,12 +232,12 @@ class Mailer implements MailerInterface, MailQueueInterface
      * @param MailableInterface $view
      * @param null|string $queue
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function later(\DateInterval|\DateTimeInterface|int $delay, $view, $queue = null): mixed
     {
         if (! $view instanceof MailableInterface) {
-            throw new InvalidArgumentException('Only mailables may be queued.');
+            throw new \InvalidArgumentException('Only mailables may be queued.');
         }
 
         return $view->mailer($this->name)->later(
@@ -287,7 +283,7 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 解析给定的视图名称或数组。
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     protected function parseView(array|string $view): array
     {
@@ -307,13 +303,13 @@ class Mailer implements MailerInterface, MailQueueInterface
         // named keys instead, allowing the developers to use one or the other.
         if (is_array($view)) {
             return [
-                    $view['html'] ?? null,
-                    $view['text'] ?? null,
-                    $view['raw'] ?? null,
+                $view['html'] ?? null,
+                $view['text'] ?? null,
+                $view['raw'] ?? null,
             ];
         }
 
-        throw new InvalidArgumentException('Invalid view.');
+        throw new \InvalidArgumentException('Invalid view.');
     }
 
     /**

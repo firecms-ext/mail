@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail;
 
-use Closure;
 use FirecmsExt\Mail\Contracts\MailableInterface;
 use Hyperf\Filesystem\FilesystemFactory;
 use Hyperf\Macroable\Macroable;
@@ -33,12 +32,12 @@ class Attachment
     /**
      * A callback that attaches the attachment to the mail message.
      */
-    protected Closure $resolver;
+    protected \Closure $resolver;
 
     /**
      * Create a mail attachment.
      */
-    private function __construct(Closure $resolver)
+    private function __construct(\Closure $resolver)
     {
         $this->resolver = $resolver;
     }
@@ -54,7 +53,7 @@ class Attachment
     /**
      * Create a mail attachment from in-memory data.
      */
-    public static function fromData(Closure $data, string $name): static
+    public static function fromData(\Closure $data, string $name): static
     {
         return (new static(
             fn ($attachment, $pathStrategy, $dataStrategy) => $dataStrategy($data, $attachment)
@@ -114,7 +113,7 @@ class Attachment
     /**
      * Attach the attachment with the given strategies.
      */
-    public function attachWith(Closure $pathStrategy, Closure $dataStrategy): mixed
+    public function attachWith(\Closure $pathStrategy, \Closure $dataStrategy): mixed
     {
         return ($this->resolver)($this, $pathStrategy, $dataStrategy);
     }

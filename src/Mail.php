@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail;
 
 use FirecmsExt\Mail\Contracts\MailableInterface;
@@ -31,8 +30,6 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class Mail
 {
     /**
-     * @param $method
-     * @param $args
      * @return mixed
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

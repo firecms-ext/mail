@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace FirecmsExt\Mail\Contracts;
 
-use Closure;
 use FirecmsExt\Mail\PendingMail;
 use FirecmsExt\Mail\SentMessage;
 
@@ -38,5 +37,5 @@ interface MailerInterface
     /**
      * Send a new message using a view.
      */
-    public function send(array|string|MailableInterface $view, Closure|string $callback = null): mixed;
+    public function send(array|string|MailableInterface $view, \Closure|string $callback = null): mixed;
 }

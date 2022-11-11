@@ -40,8 +40,6 @@ class Message
     /**
      * 动态地向 Symfony 实例传递缺失的方法。
      *
-     * @param string $method
-     * @param array $parameters
      * @return mixed
      */
     public function __call(string $method, array $parameters)

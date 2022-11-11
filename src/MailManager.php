@@ -9,10 +9,8 @@ declare(strict_types=1);
  * @contact  zhimengxingyun@klmis.cn
  * @license  https://github.com/firecms-ext/mail/blob/master/LICENSE
  */
-
 namespace FirecmsExt\Mail;
 
-use Closure;
 use FirecmsExt\Mail\Contracts\MailManagerInterface;
 use FirecmsExt\Mail\Transport\ArrayTransport;
 use FirecmsExt\Mail\Transport\LogTransport;
@@ -21,7 +19,6 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\ContainerInterface;
 use Hyperf\Utils\Arr;
 use Hyperf\Utils\Str;
-use InvalidArgumentException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Transport\Dsn;
@@ -105,7 +102,7 @@ class MailManager implements MailManagerInterface
 
     /**
      * 创建一个新的传输实例。
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function createSymfonyTransport(array $config): TransportInterface
     {
@@ -119,7 +116,7 @@ class MailManager implements MailManagerInterface
         }
 
         if (trim($transport ?? '') === '' || ! method_exists($this, $method = 'create' . ucfirst($transport) . 'Transport')) {
-            throw new InvalidArgumentException("Unsupported mail transport [{$transport}].");
+            throw new \InvalidArgumentException("Unsupported mail transport [{$transport}].");
         }
 
         return $this->{$method}($config);
@@ -152,7 +149,7 @@ class MailManager implements MailManagerInterface
      *
      * @return $this
      */
-    public function extend(string $driver, Closure $callback): static
+    public function extend(string $driver, \Closure $callback): static
     {
         $this->customCreators[$driver] = $callback;
 
@@ -187,7 +184,7 @@ class MailManager implements MailManagerInterface
         $config = $this->getConfig($name);
 
         if (is_null($config)) {
-            throw new InvalidArgumentException("MailerInterface [{$name}] is not defined.");
+            throw new \InvalidArgumentException("MailerInterface [{$name}] is not defined.");
         }
 
         // 一旦我们创建了邮件实例，我们将设置一个容器实例
@@ -363,7 +360,7 @@ class MailManager implements MailManagerInterface
             $config = $this->getConfig($name);
 
             if (is_null($config)) {
-                throw new InvalidArgumentException("Mailer [{$name}] is not defined.");
+                throw new \InvalidArgumentException("Mailer [{$name}] is not defined.");
             }
 
             // Now, we will check if the "driver" key exists and if it does we will set
