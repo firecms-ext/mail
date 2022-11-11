@@ -85,17 +85,17 @@ abstract class Mailable implements MailableInterface
     /**
      * 邮件主题.
      */
-    public string $subject;
+    public string $subject = '';
 
     /**
      * 邮件视图。
      */
-    public string $view;
+    public string $view = '';
 
     /**
      * 纯文本视图。
      */
-    public string $textView;
+    public string $textView ='';
 
     /**
      * 邮件视图数据.
@@ -125,12 +125,12 @@ abstract class Mailable implements MailableInterface
     /**
      * 格式化消息时应使用的主题名称。
      */
-    public ?string $theme;
+    public ?string $theme = null;
 
     /**
      * 应该发送消息的邮件服务器的名称。
      */
-    public string $mailer;
+    public string $mailer = '';
 
     /**
      * 在构建视图数据时应该调用的回调。
@@ -142,7 +142,7 @@ abstract class Mailable implements MailableInterface
     /**
      * The HTML to use for the message.
      */
-    protected string $html;
+    protected string $html ='';
 
     /**
      * The tags for the message.
@@ -168,7 +168,7 @@ abstract class Mailable implements MailableInterface
      *
      * @throws BadMethodCallException
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters)
     {
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);

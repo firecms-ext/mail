@@ -44,7 +44,7 @@ class Message
      * @param array $parameters
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters)
     {
         return $this->forwardCallTo($this->message, $method, $parameters);
     }

@@ -37,7 +37,7 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 为邮件服务器配置的名称。
      */
-    protected string $name;
+    protected string $name ='';
 
     /**
      * Symfony Transport 实例。
@@ -52,27 +52,27 @@ class Mailer implements MailerInterface, MailQueueInterface
     /**
      * 全局发送"地址"和"名称".
      */
-    protected array $from;
+    protected array $from = [];
 
     /**
      * 全局回复"地址"和"名称"。
      */
-    protected array $replyTo;
+    protected array $replyTo = [];
 
     /**
      * 全局返回"地址"。
      */
-    protected array $returnPath;
+    protected array $returnPath = [];
 
     /**
      * 全局邮寄"地址"和"名称".
      */
-    protected array $to;
+    protected array $to = [];
 
     /**
      * 队列工厂实现。
      */
-    protected ?JobInterface $queue;
+    protected ?JobInterface $queue = null;
 
     /**
      * 创建一个新的 Mailer 实例。
